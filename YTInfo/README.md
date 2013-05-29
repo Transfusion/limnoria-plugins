@@ -1,5 +1,6 @@
 #Description:
 * A plugin that fetches info about a YouTube URL for Limnoria/Supybot.
+
 ##Expected output:
 * [15:46:53] <&Transfusion> !yinfo http://www.youtube.com/watch?v=oTKuWlx-tIY
 * [15:46:54] <@yapib> Transfusion: Title: ASUS Transformer AiO P1801 Cat: Tech Duration: 0:01:11 Published On: 2013-03-07T05:30:07.000Z Rating: 4.9447002 out of 5
