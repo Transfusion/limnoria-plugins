@@ -40,7 +40,7 @@ def video_id(value):
         if query.path[:3] == '/v/':
             return query.path.split('/')[2]
     # fail?
-    return "Not a YT Video"
+    return "null"
 
 class YTInfo(callbacks.Plugin):
     """Add the help for "@plugin help YTInfo" here
