@@ -8,6 +8,7 @@
 import supybot.utils as utils
 from supybot.commands import *
 import supybot.plugins as plugins
+import datetime
 import supybot.ircutils as ircutils
 import gdata.youtube.service
 import gdata.youtube
