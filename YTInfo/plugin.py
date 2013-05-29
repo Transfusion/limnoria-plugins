@@ -20,13 +20,26 @@ except:
     # without the i18n module
     _ = lambda x:x
 def video_id(value):
-        url_data = urlparse.urlparse(value)
-        query = urlparse.parse_qs(url_data.query)
-        try :
-            video = query["v"][0]
-        except KeyError:
-            video = "null"
-        return video
+    """
+    Examples:
+    - http://youtu.be/SA2iWivDJiE
+    - http://www.youtube.com/watch?v=_oPAwA_Udwc&feature=feedu
+    - http://www.youtube.com/embed/SA2iWivDJiE
+    - http://www.youtube.com/v/SA2iWivDJiE?version=3&amp;hl=en_US
+    """
+    query = urlparse.urlparse(value)
+    if query.hostname == 'youtu.be':
+        return query.path[1:]
+    if query.hostname in ('www.youtube.com', 'youtube.com'):
+        if query.path == '/watch':
+            p = parse_qs(query.query)
+            return p['v'][0]
+        if query.path[:7] == '/embed/':
+            return query.path.split('/')[2]
+        if query.path[:3] == '/v/':
+            return query.path.split('/')[2]
+    # fail?
+    return "Not a YT Video"
 
 class YTInfo(callbacks.Plugin):
     """Add the help for "@plugin help YTInfo" here
@@ -41,7 +54,7 @@ class YTInfo(callbacks.Plugin):
         else:
             yt_service = gdata.youtube.service.YouTubeService()
             yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id=video_id(str(params[0])))
+            entry = yt_service.GetYouTubeVideoEntry(video_id=video_id(str(n)))
             try:
                 u = entry.rating.average
             except AttributeError:
@@ -59,3 +72,4 @@ Class = YTInfo
 
 
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
+
