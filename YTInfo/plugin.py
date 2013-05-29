@@ -12,6 +12,7 @@ import supybot.ircutils as ircutils
 import gdata.youtube.service
 import gdata.youtube
 import supybot.callbacks as callbacks
+import urlparse
 try:
     from supybot.i18n import PluginInternationalization
     _ = PluginInternationalization('YTInfo')
