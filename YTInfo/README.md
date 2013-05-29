@@ -6,4 +6,4 @@
 * [16:07:27] <@yapib> Transfusion: Title: Genie - SNSD MV mix (Korean & Japanese) Cat: Music Duration: 0:04:19 Published On: 2010-08-28T11:46:50.000Z Rating: 5.0 out of 5
 
 #Usage:
-* [16:09:03] <@yapib> Transfusion: (yinfo <valid YouTube URL>) -- Gets stats and popularity for this YouTube Video. 
+* [16:09:03] <@yapib> Transfusion: (yinfo \<valid YouTube URL\>) -- Gets stats and popularity for this YouTube Video. 
