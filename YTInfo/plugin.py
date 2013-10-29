@@ -51,6 +51,8 @@ class YTInfo(callbacks.PluginRegexp):
     def ytsnarfer(self, irc, msg, match):
 	r".{1,}"
         url = match.group(0)
+        if "yinfo" in url:
+            return
         for i in re.findall("(?P<url>https?://[^\s]+)", url):
 	    if video_id(str(i)) == "null" or self.registryValue('ytSnarfer') is False:
                 return
