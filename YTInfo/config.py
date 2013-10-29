@@ -28,6 +28,8 @@ YTInfo = conf.registerPlugin('YTInfo')
 # This is where your configuration variables (if any) should go.  For example:
 # conf.registerGlobalValue(YTInfo, 'someConfigVariableName',
 #     registry.Boolean(False, _("""Help for someConfigVariableName.""")))
-
+conf.registerChannelValue(YTInfo, 'ytSnarfer',
+    registry.Boolean(False, """Determines whether the bot will automatically
+    'snarf' YouTube URLs and print information about them."""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
