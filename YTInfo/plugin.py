@@ -12,6 +12,7 @@ import datetime
 import supybot.ircutils as ircutils
 import gdata.youtube.service
 import gdata.youtube
+import re
 import supybot.callbacks as callbacks
 import urlparse
 try:
@@ -43,20 +44,41 @@ def video_id(value):
     # fail?
     return "null"
 
-class YTInfo(callbacks.Plugin):
+class YTInfo(callbacks.PluginRegexp):
     """Add the help for "@plugin help YTInfo" here
     This should describe *how* to use this plugin."""
-    
-    def yinfo(self, irc, msg, args, n):
+    regexps = ['ytsnarfer']
+    def ytsnarfer(self, irc, msg, match):
+	r".{1,}"
+        url = match.group(0)
+        for i in re.findall("(?P<url>https?://[^\s]+)", url):
+	    if video_id(str(i)) == "null" or self.registryValue('ytSnarfer') is False:
+                return
+            else:
+                yt_service = gdata.youtube.service.YouTubeService()
+                yt_service.ssl = False
+                entry = yt_service.GetYouTubeVideoEntry(video_id=video_id(str(i)))
+                try:
+                    u = entry.rating.average
+                except AttributeError:
+                    u = "-"
+                irc.reply( "\x02Title:\x02 "+\
+                                entry.media.title.text+" \x02Cat:\x02 "+\
+                                entry.media.category[0].text+" \x02Duration:\x02 "+\
+                                str(datetime.timedelta(seconds=int(entry.media.duration.seconds)))+" \x02Published On:\x02 "+\
+                                entry.published.text+" \x02Rating:\x02 "+\
+                                u+" out of 5"+" \x02Views:\x02 "+entry.statistics.view_count, prefixNick=False)
+
+    def yinfo(self, irc, msg, args, url):
         ''' <valid YouTube URL>
         Gets stats and popularity for this YouTube Video.
         '''
-        if video_id(str(n)) == "null":
+        if video_id(str(url)) == "null":
             irc.reply("not a youtube video")
         else:
             yt_service = gdata.youtube.service.YouTubeService()
             yt_service.ssl = False
-            entry = yt_service.GetYouTubeVideoEntry(video_id=video_id(str(n)))
+            entry = yt_service.GetYouTubeVideoEntry(video_id=video_id(str(url)))
             try:
                 u = entry.rating.average
             except AttributeError:
@@ -66,7 +88,7 @@ class YTInfo(callbacks.Plugin):
                                 entry.media.category[0].text+" \x02Duration:\x02 "+\
                                 str(datetime.timedelta(seconds=int(entry.media.duration.seconds)))+" \x02Published On:\x02 "+\
                                 entry.published.text+" \x02Rating:\x02 "+\
-                                u+" out of 5")
+                                u+" out of 5"+" \x02Views:\x02 "+entry.statistics.view_count)
     yinfo = wrap(yinfo , ['httpUrl'])
 
 
@@ -74,4 +96,3 @@ Class = YTInfo
 
 
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
-
